@@ -27,13 +27,36 @@ def F():
 
 
 def select_all():
-	for i in IntVar_list:
-		i.set(1)
+	if another_Checkbutton_list[0].winfo_viewable():
+		for i in IntVar_list:
+			i.set(1)
+		for i in another_IntVar_list:
+			i.set(1)
+	else:
+		for i in IntVar_list:
+			i.set(1)
 
 
 def deselect_all():
-	for i in IntVar_list:
-		i.set(0)
+	if another_Checkbutton_list[0].winfo_viewable():
+		for i in IntVar_list:
+			i.set(0)
+		for i in another_IntVar_list:
+			i.set(0)
+	else:
+		for i in IntVar_list:
+			i.set(0)
+
+
+def show_another():
+	if another_Checkbutton_list[0].winfo_viewable():
+		for i in range(another_app_list_len):
+			another_Checkbutton_list[i].grid_remove()
+			another_Checkbutton_label_list[i].grid_remove()
+	else:
+		for i in range(another_app_list_len):
+			another_Checkbutton_list[i].grid(column=another_last_column_num, row=i+1, sticky=W)
+			another_Checkbutton_label_list[i].grid(column=another_last_column_num+1, row=i+1, sticky=W)
 
 
 def addapp_button():
@@ -52,11 +75,11 @@ def addapp_button():
 	# addapp_window.mainloop()
 
 	addapp_entry = Entry(window, fg="#000000", bg="#FFFFFF")
-	addapp_entry.grid(column=last_i+2, row=5, columnspan=last_i+3, padx=(50,0), sticky=W+E)
+	addapp_entry.grid(column=last_column_num+3, row=6, columnspan=last_column_num+4, padx=(50,0), sticky=W+E)
 	addapp_button_ADD = Button(window, text="Add", command=lambda: addapp(addapp_entry))
-	addapp_button_ADD.grid(column=last_i+2, row=6, padx=(50,0), sticky=W+E)
+	addapp_button_ADD.grid(column=last_column_num+3, row=7, padx=(50,0), sticky=W+E)
 	addapp_button_CANCEL = Button(window, text="Cancel", command=lambda: addapp_cancel(addapp_entry,addapp_button_ADD,addapp_button_CANCEL))
-	addapp_button_CANCEL.grid(column=last_i+3, row=6, sticky=W+E)
+	addapp_button_CANCEL.grid(column=last_column_num+4, row=7, sticky=W+E)
 
 
 
@@ -93,38 +116,60 @@ for i in range(app_list_len):
 	Checkbutton_label_list.append(Label(window, text=app_list[i]))
 
 
-last_i = 0
+last_column_num = 0
 for i in range(app_list_len):
 	if i >= 19 and i <= 39:
 		Checkbutton_list[i].grid(column=3, row=i-18, sticky=W)
-		last_i = 4
+		last_column_num = 4
 		Checkbutton_label_list[i].grid(column=4, row=i-18, sticky=W)
 	else:
 		Checkbutton_list[i].grid(column=1, row=i+1, sticky=W)
-		last_i = 2
+		last_column_num = 2
 		Checkbutton_label_list[i].grid(column=2, row=i+1, sticky=W)
 
+
+### For another apps
+another_last_column_num = 1 + last_column_num
+another_IntVar_list = []
+another_Checkbutton_list = []
+another_Checkbutton_label_list = []
+another_app_list = []
+with open ("another_appfile.txt", "r") as f:
+	l = f.read()
+	l = l.replace("\n",",")
+	another_app_list = l.split(",")
+
+
+another_app_list.pop()
+another_app_list_len = len(another_app_list)
+for i in range(another_app_list_len):
+	another_IntVar_list.append(IntVar())
+	another_Checkbutton_list.append(Checkbutton(window, variable=another_IntVar_list[i]))
+	another_Checkbutton_label_list.append(Label(window, text=another_app_list[i]))
+###
 
 distr_list = ["Archlinux", "Ubuntu"]
 distr_cb = Combobox(window, values=distr_list, width=10)
 distr_cb.set(distr_list[0])
-distr_cb.grid(column=last_i+2, columnspan=last_i+3, row=2, padx=(50,0), sticky=W+E)
+distr_cb.grid(column=last_column_num+3, columnspan=last_column_num+4, row=2, padx=(50,0), sticky=W+E)
 
 label = Label(window, text="Choose dist")
-label.grid(column=last_i+2, columnspan=last_i+3, row=1, padx=(50,0))
+label.grid(column=last_column_num+3, columnspan=last_column_num+4, row=1, padx=(50,0))
 
 #Last button to start proces
-final_button = Button(window, text="Let's go", command=letsgo)
-final_button.grid(column=last_i+2, row=3, padx=(50,0), sticky=W+E)
+final_button = Button(window, text="Let\'s go", command=letsgo)
+final_button.grid(column=last_column_num+3, row=3, padx=(50,0), sticky=W+E)
 
 addapp_button = Button(window, text="Add app", command=addapp_button)
-addapp_button.grid(column=last_i+3, row=3, sticky=W+E)
+addapp_button.grid(column=last_column_num+4, row=3, sticky=W+E)
 
 select_all_button = Button(window, text="Select all", command=select_all)
-select_all_button.grid(column=last_i+2, row=4, padx=(50,0), sticky=W+E)
+select_all_button.grid(column=last_column_num+3, row=4, padx=(50,0), sticky=W+E)
 
 deselect_all_button = Button(window, text="Deselect all", command=deselect_all)
-deselect_all_button.grid(column=last_i+3, row=4, sticky=W+E)
+deselect_all_button.grid(column=last_column_num+4, row=4, sticky=W+E)
 
+another_button = Button(window, text="Another", command=show_another)
+another_button.grid(column=last_column_num+3, row=5,padx=(50,0))
 
 window.mainloop()
