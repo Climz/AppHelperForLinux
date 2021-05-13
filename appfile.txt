@@ -1,7 +1,7 @@
 flameshot
 git
 htop
-pip
+python3-pip
 qttools5-dev
 qttools5-dev-tools
 obs-studio
@@ -17,4 +17,4 @@ gimp
 libreoffice
 python3-tk
 inkscape
-FF
+f
