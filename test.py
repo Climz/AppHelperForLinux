@@ -7,7 +7,7 @@ import json
 with open('another_appfile.json', 'r') as f:
     another_appfile = json.load(f)
 
-
+check = False
 window = Tk()
 window.title("AppHelper")
 chk_state = IntVar()
@@ -18,31 +18,9 @@ menu_frame.pack(side=LEFT, fill=Y)
 
 
 
-# i = 0
-# while i <= 15:
-#     chk = Checkbutton(app_frame, text="Testing", var=True)
-#     chk.grid(column=0, row=i)
-#     i += 1
-
-# i = 0
-# while i <= 15:
-#     chk = Checkbutton(app_frame, text="Testing", var=True)
-#     chk.grid(column=1, row=i)
-#     i += 1
-
-
-
-
-
-
-# just_button = Button(master=menu_frame, text="Just button")
-# just_button.grid(column=2, row=0)
-# just_button1 = Button(master=menu_frame, text="Just button")
-# just_button1.grid(column=2, row=1)
-window.minsize("413","437")
-window.maxsize("413","437")
 
 def addapp(ae):
+	# Добавить регулярные выражения
 	with open("appfile.txt", "a") as f:
 		f.write(ae.get() + "\n")
 	ae.delete(0, END)
@@ -82,29 +60,25 @@ def deselect_all():
 
 def show_another():
 	if another_Checkbutton_list[0].winfo_viewable():
+		i = 0
 		for i in range(another_app_list_len):
 			another_Checkbutton_list[i].grid_remove()
 			another_Checkbutton_label_list[i].grid_remove()
-			window.minsize("413","437")
-			window.maxsize("413","437")
 	else:
+		i = 0
 		for i in range(another_app_list_len):
 			another_Checkbutton_list[i].grid(column=another_last_column_num, row=i+1, sticky=W)
 			another_Checkbutton_label_list[i].grid(column=another_last_column_num+1, row=i+1, sticky=W)
-			window.minsize("485","437")
-			window.maxsize("485","437")
-
+	
 
 def addapp_button():
-	while True:
-		print(window.winfo_reqheight())
-		print(window.winfo_reqwidth())
 	addapp_entry = Entry(master=menu_frame, fg="#000000", bg="#FFFFFF")
 	addapp_entry.grid(column=last_column_num+3, row=6, columnspan=last_column_num+4, padx=(50,0), sticky=W+E)
 	addapp_button_ADD = Button(master=menu_frame, text="Add", command=lambda: addapp(addapp_entry))
 	addapp_button_ADD.grid(column=last_column_num+3, row=7, padx=(50,0), sticky=W+E)
 	addapp_button_CANCEL = Button(master=menu_frame, text="Cancel", command=lambda: addapp_cancel(addapp_entry,addapp_button_ADD,addapp_button_CANCEL))
 	addapp_button_CANCEL.grid(column=last_column_num+4, row=7, sticky=W+E)
+
 
 
 def letsgo():
@@ -194,33 +168,6 @@ for i in range(another_app_list_len):
 	another_Checkbutton_label_list.append(Label(master=app_frame, text=another_app_list[i]))
 ##
 
-
-
-
-# distr_list = ["Archlinux", "Ubuntu"]
-# distr_cb = Combobox(window, values=distr_list, width=10)
-# distr_cb.set(distr_list[1])
-# # distr_cb.grid(column=last_column_num+3, columnspan=last_column_num+4, row=2, padx=(50,0), sticky=W+E)
-
-# label = Label(window, text="Choose dist")
-# # label.grid(column=last_column_num+3, columnspan=last_column_num+4, row=1, padx=(50,0))
-
-# #Last button to start proces
-# final_button = Button(window, text="Let\'s go", command=letsgo)
-# # final_button.grid(column=last_column_num+3, row=3, padx=(50,0), sticky=W+E)
-
-# addapp_button = Button(window, text="Add app", command=addapp_button)
-# # addapp_button.grid(column=last_column_num+4, row=3, sticky=W+E)
-
-# select_all_button = Button(window, text="Select all", command=select_all)
-# # select_all_button.grid(column=last_column_num+3, row=4, padx=(50,0), sticky=W+E)
-
-# deselect_all_button = Button(window, text="Deselect all", command=deselect_all)
-# # deselect_all_button.grid(column=last_column_num+4, row=4, sticky=W+E)
-
-# another_button = Button(window, text="Another", command=show_another)
-# # another_button.grid(column=last_column_num+3, row=5,padx=(50,0))
-
 distr_list = ["Archlinux", "Ubuntu"]
 distr_cb = Combobox(master=menu_frame, values=distr_list, width=10)
 distr_cb.set(distr_list[1])
@@ -244,6 +191,7 @@ deselect_all_button.grid(column=last_column_num+4, row=4, sticky=W+E)
 
 another_button = Button(master=menu_frame, text="Another", command=show_another)
 another_button.grid(column=last_column_num+3, row=5,padx=(50,0))
+
 
 
 window.mainloop()
