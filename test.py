@@ -7,7 +7,7 @@ import json
 with open('another_appfile.json', 'r') as f:
     another_appfile = json.load(f)
 
-check = False
+
 window = Tk()
 window.title("AppHelper")
 chk_state = IntVar()
@@ -15,8 +15,6 @@ app_frame = Frame()
 menu_frame = Frame()
 app_frame.pack(side=LEFT, fill=BOTH)
 menu_frame.pack(side=LEFT, fill=Y)
-
-
 
 
 def addapp(ae):
@@ -27,9 +25,11 @@ def addapp(ae):
 
 
 def addapp_cancel(entry, add, cancel):
+	global addapp_button_current_state
 	entry.grid_remove()
 	add.grid_remove()
 	cancel.grid_remove()
+	addapp_button_current_state = False
 
 
 def F():
@@ -60,26 +60,28 @@ def deselect_all():
 
 def show_another():
 	if another_Checkbutton_list[0].winfo_viewable():
-		i = 0
 		for i in range(another_app_list_len):
 			another_Checkbutton_list[i].grid_remove()
 			another_Checkbutton_label_list[i].grid_remove()
 	else:
-		i = 0
 		for i in range(another_app_list_len):
 			another_Checkbutton_list[i].grid(column=another_last_column_num, row=i+1, sticky=W)
 			another_Checkbutton_label_list[i].grid(column=another_last_column_num+1, row=i+1, sticky=W)
-	
+
 
 def addapp_button():
-	addapp_entry = Entry(master=menu_frame, fg="#000000", bg="#FFFFFF")
-	addapp_entry.grid(column=last_column_num+3, row=6, columnspan=last_column_num+4, padx=(50,0), sticky=W+E)
-	addapp_button_ADD = Button(master=menu_frame, text="Add", command=lambda: addapp(addapp_entry))
-	addapp_button_ADD.grid(column=last_column_num+3, row=7, padx=(50,0), sticky=W+E)
-	addapp_button_CANCEL = Button(master=menu_frame, text="Cancel", command=lambda: addapp_cancel(addapp_entry,addapp_button_ADD,addapp_button_CANCEL))
-	addapp_button_CANCEL.grid(column=last_column_num+4, row=7, sticky=W+E)
-
-
+	global addapp_button_current_state
+	if addapp_button_current_state:
+		addapp_entry.grid_remove()
+		addapp_button_ADD.grid_remove()
+		addapp_button_CANCEL.grid_remove()
+		addapp_button_current_state = False
+	else:
+		addapp_entry.grid(column=last_column_num+3, row=6, columnspan=last_column_num+4, padx=(50,0), sticky=W+E)
+		addapp_button_ADD.grid(column=last_column_num+3, row=7, padx=(50,0), sticky=W+E)
+		addapp_button_CANCEL.grid(column=last_column_num+4, row=7, sticky=W+E)
+		addapp_button_current_state = True
+		
 
 def letsgo():
 	what_download_list = []
@@ -177,21 +179,31 @@ label = Label(master=menu_frame, text="Choose dist")
 label.grid(column=last_column_num+3, columnspan=last_column_num+4, row=1, padx=(50,0))
 
 #Last button to start proces
-final_button = Button(master=menu_frame, text="Let\'s go")
+final_button = Button(master=menu_frame, text="Let\'s go", command=letsgo)
 final_button.grid(column=last_column_num+3, row=3, padx=(50,0), sticky=W+E)
 
+addapp_button_current_state = False
 addapp_button = Button(master=menu_frame, text="Add app", command=addapp_button)
 addapp_button.grid(column=last_column_num+4, row=3, sticky=W+E)
 
-select_all_button = Button(master=menu_frame, text="Select all")
+select_all_button = Button(master=menu_frame, text="Select all", command=select_all)
 select_all_button.grid(column=last_column_num+3, row=4, padx=(50,0), sticky=W+E)
 
-deselect_all_button = Button(master=menu_frame, text="Deselect all")
+deselect_all_button = Button(master=menu_frame, text="Deselect all", command=deselect_all)
 deselect_all_button.grid(column=last_column_num+4, row=4, sticky=W+E)
 
 another_button = Button(master=menu_frame, text="Another", command=show_another)
 another_button.grid(column=last_column_num+3, row=5,padx=(50,0))
 
-
+#Add button func
+addapp_entry = Entry(master=menu_frame, fg="#000000", bg="#FFFFFF")
+addapp_entry.grid(column=last_column_num+3, row=6, columnspan=last_column_num+4, padx=(50,0), sticky=W+E)
+addapp_button_ADD = Button(master=menu_frame, text="Add", command=lambda: addapp(addapp_entry))
+addapp_button_ADD.grid(column=last_column_num+3, row=7, padx=(50,0), sticky=W+E)
+addapp_button_CANCEL = Button(master=menu_frame, text="Cancel", command=lambda: addapp_cancel(addapp_entry,addapp_button_ADD,addapp_button_CANCEL))
+addapp_button_CANCEL.grid(column=last_column_num+4, row=7, sticky=W+E)
+addapp_entry.grid_remove()
+addapp_button_ADD.grid_remove()
+addapp_button_CANCEL.grid_remove()
 
 window.mainloop()
