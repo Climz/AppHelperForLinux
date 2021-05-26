@@ -38,7 +38,6 @@ def addapp_another_command():
 def addapp_another():
 	# Если вот это true, значит меню добавления команды активно
 	global addapp_button_another_current_state
-	print(addapp_button_another_current_state)
 	if addapp_button_another_current_state:
 		addapp_command_entry.grid_remove()
 		addapp_command_add.grid_remove()
@@ -59,6 +58,7 @@ def addapp(ae):
 	if addapp_button_another_current_state: # В данный момент добавляется another приложение
 		ae.get()
 		addapp_another_dict = {}
+		addapp_another_addcommand_list.append(addapp_command_entry.get())
 		addapp_another_dict[ae.get()] = addapp_another_addcommand_list
 		with open("another_appfile_test.json", "r+") as f:
 			data = json.load(f)
@@ -66,6 +66,7 @@ def addapp(ae):
 			f.seek(0)
 			json.dump(data, f)
 		ae.delete(0, END)
+		addapp_command_entry.delete(0, END)
 	else:
 		with open("appfile.txt", "a") as f:
 			f.write(ae.get() + "\n")
