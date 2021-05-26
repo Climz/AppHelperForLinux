@@ -3,7 +3,7 @@ from tkinter.ttk import Combobox, Checkbutton, Button
 import os
 import json
 
-
+# Этот участок кода был создан для корректной работы команды cd 175 с.к.
 with open('another_appfile.json', 'r') as f:
     another_appfile = json.load(f)
 
@@ -17,22 +17,77 @@ app_frame.pack(side=LEFT, fill=BOTH)
 menu_frame.pack(side=LEFT, fill=Y)
 
 
+addapp_another_addcommand_list = []
+def addapp_another_addcommand(ace):
+	# Добавить регулярные выражения
+	addapp_another_addcommand_list.append(ace.get())
+	ace.delete(0, END)
+
+def addapp_another_cancel():
+	global addapp_button_another_current_state
+	addapp_command_entry.grid_remove()
+	addapp_command_add.grid_remove()
+	addapp_command_cancel.grid_remove()
+	addapp_button_another_current_state = False
+
+
+def addapp_another_command():
+	global addapp_command_current_state
+
+
+def addapp_another():
+	# Если вот это true, значит меню добавления команды активно
+	global addapp_button_another_current_state
+	print(addapp_button_another_current_state)
+	if addapp_button_another_current_state:
+		addapp_command_entry.grid_remove()
+		addapp_command_add.grid_remove()
+		addapp_command_cancel.grid_remove()
+		addapp_button_another_current_state = False
+	else:
+		addapp_command_entry.grid(column=last_column_num+3, row=9, columnspan=last_column_num+4, padx=(50,0), sticky=W+E)
+		addapp_command_add.grid(column=last_column_num+3, row=10, padx=(50,0), sticky=W+E)
+		addapp_command_cancel.grid(column=last_column_num+4, row=10, sticky=W+E)
+		addapp_button_another_current_state = True
+
+
+
 def addapp(ae):
 	# Добавить регулярные выражения
-	with open("appfile.txt", "a") as f:
-		f.write(ae.get() + "\n")
-	ae.delete(0, END)
+	global addapp_button_another_current_state
+	
+	if addapp_button_another_current_state: # В данный момент добавляется another приложение
+		ae.get()
+		addapp_another_dict = {}
+		addapp_another_dict[ae.get()] = addapp_another_addcommand_list
+		with open("another_appfile_test.json", "r+") as f:
+			data = json.load(f)
+			data.update(addapp_another_dict)
+			f.seek(0)
+			json.dump(data, f)
+		ae.delete(0, END)
+	else:
+		with open("appfile.txt", "a") as f:
+			f.write(ae.get() + "\n")
+		ae.delete(0, END)
 
 
 def addapp_cancel(entry, add, cancel):
 	global addapp_button_current_state
+	global addapp_button_another_current_state
+
 	entry.grid_remove()
 	add.grid_remove()
 	cancel.grid_remove()
+	addapp_command_entry.grid_remove()
+	addapp_command_add.grid_remove()
+	addapp_command_cancel.grid_remove()
+	addapp_button_anotherapp.grid_remove()
 	addapp_button_current_state = False
+	addapp_button_another_current_state = False
 
 
-def F():
+def f():
 	pass
 
 
@@ -71,15 +126,28 @@ def show_another():
 
 def addapp_button():
 	global addapp_button_current_state
+	global addapp_button_another_current_state
+
 	if addapp_button_current_state:
 		addapp_entry.grid_remove()
 		addapp_button_ADD.grid_remove()
 		addapp_button_CANCEL.grid_remove()
+		addapp_button_anotherapp.grid_remove()
+		addapp_button_command.grid_remove()
+		addapp_command_entry.grid_remove()
+		addapp_command_add.grid_remove()
+		addapp_command_cancel.grid_remove()
+		addapp_button_anotherapp.grid_remove()
 		addapp_button_current_state = False
+		addapp_button_another_current_state = False
 	else:
+
 		addapp_entry.grid(column=last_column_num+3, row=6, columnspan=last_column_num+4, padx=(50,0), sticky=W+E)
 		addapp_button_ADD.grid(column=last_column_num+3, row=7, padx=(50,0), sticky=W+E)
 		addapp_button_CANCEL.grid(column=last_column_num+4, row=7, sticky=W+E)
+		addapp_button_anotherapp.grid(column=last_column_num+3, row=8, padx=(50,0), sticky=W+E)
+		
+
 		addapp_button_current_state = True
 		
 
@@ -156,7 +224,7 @@ another_IntVar_list = []
 another_Checkbutton_list = []
 another_Checkbutton_label_list = []
 another_app_list = []
-with open ("another_appfile.json", "r") as f:
+with open ("another_appfile_test.json", "r") as f:
 	l = json.load(f)
 	# l = l.replace("\n",",")
 	for i in l:
@@ -195,15 +263,44 @@ deselect_all_button.grid(column=last_column_num+4, row=4, sticky=W+E)
 another_button = Button(master=menu_frame, text="Another", command=show_another)
 another_button.grid(column=last_column_num+3, row=5,padx=(50,0))
 
-#Add button func
+# Add app
+
 addapp_entry = Entry(master=menu_frame, fg="#000000", bg="#FFFFFF")
 addapp_entry.grid(column=last_column_num+3, row=6, columnspan=last_column_num+4, padx=(50,0), sticky=W+E)
 addapp_button_ADD = Button(master=menu_frame, text="Add", command=lambda: addapp(addapp_entry))
 addapp_button_ADD.grid(column=last_column_num+3, row=7, padx=(50,0), sticky=W+E)
 addapp_button_CANCEL = Button(master=menu_frame, text="Cancel", command=lambda: addapp_cancel(addapp_entry,addapp_button_ADD,addapp_button_CANCEL))
 addapp_button_CANCEL.grid(column=last_column_num+4, row=7, sticky=W+E)
+
+## Add another app 
+addapp_button_another_current_state = False
+addapp_button_anotherapp = Button(master=menu_frame, text="AA", command=addapp_another)
+addapp_button_anotherapp.grid(column=last_column_num+3, row=8, padx=(50,0), sticky=W+E)
+addapp_button_command = Button(master=menu_frame, text="Command", command=addapp_another_command)
+addapp_button_command.grid(column=last_column_num+4, row=8, sticky=W+E)
+
+
+addapp_command_current_state = False
+addapp_command_entry = Entry(master=menu_frame, fg="#000000", bg="#FFFFFF")
+addapp_command_entry.grid(column=last_column_num+3, row=9, columnspan=last_column_num+4, padx=(50,0), sticky=W+E)
+addapp_command_add = Button(master=menu_frame, text="Add", command=lambda: addapp_another_addcommand(addapp_command_entry))
+addapp_command_add.grid(column=last_column_num+3, row=10, padx=(50,0), sticky=W+E)
+addapp_command_cancel = Button(master=menu_frame, text="Cancel", command=addapp_another_cancel)
+addapp_command_cancel.grid(column=last_column_num+4, row=10, sticky=W+E)
+###
+
+
+
+##
+
+#
 addapp_entry.grid_remove()
 addapp_button_ADD.grid_remove()
 addapp_button_CANCEL.grid_remove()
+addapp_button_anotherapp.grid_remove()
+addapp_button_command.grid_remove()
+addapp_command_entry.grid_remove()
+addapp_command_add.grid_remove()
+addapp_command_cancel.grid_remove()
 
 window.mainloop()
