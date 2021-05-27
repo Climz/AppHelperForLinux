@@ -17,3 +17,4 @@ gimp
 libreoffice
 python3-tk
 inkscape
+figlet

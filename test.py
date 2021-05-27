@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter.ttk import Combobox, Checkbutton, Button
 import os
 import json
+import re
 
 # Этот участок кода был создан для корректной работы команды cd 175 с.к.
 with open('another_appfile.json', 'r') as f:
@@ -31,10 +32,6 @@ def addapp_another_cancel():
 	addapp_button_another_current_state = False
 
 
-def addapp_another_command():
-	global addapp_command_current_state
-
-
 def addapp_another():
 	# Если вот это true, значит меню добавления команды активно
 	global addapp_button_another_current_state
@@ -54,23 +51,28 @@ def addapp_another():
 def addapp(ae):
 	# Добавить регулярные выражения
 	global addapp_button_another_current_state
+	addapp_name = ae.get()
 	
-	if addapp_button_another_current_state: # В данный момент добавляется another приложение
-		ae.get()
-		addapp_another_dict = {}
-		addapp_another_addcommand_list.append(addapp_command_entry.get())
-		addapp_another_dict[ae.get()] = addapp_another_addcommand_list
-		with open("another_appfile_test.json", "r+") as f:
-			data = json.load(f)
-			data.update(addapp_another_dict)
-			f.seek(0)
-			json.dump(data, f)
-		ae.delete(0, END)
-		addapp_command_entry.delete(0, END)
+	parser = re.search("[^-A-Za-z0-9\\.\\=]", addapp_name)
+
+	if parser == None:
+		if addapp_button_another_current_state: # В данный момент добавляется another приложение
+			addapp_another_dict = {}
+			addapp_another_addcommand_list.append(addapp_command_entry.get())
+			addapp_another_dict[addapp_name] = addapp_another_addcommand_list
+			with open("another_appfile_test.json", "r+") as f:
+				data = json.load(f)
+				data.update(addapp_another_dict)
+				f.seek(0)
+				json.dump(data, f)
+			ae.delete(0, END)
+			addapp_command_entry.delete(0, END)
+		else:
+			with open("appfile.txt", "a") as f:
+				f.write(addapp_name.lower() + "\n")
+			ae.delete(0, END)
 	else:
-		with open("appfile.txt", "a") as f:
-			f.write(ae.get() + "\n")
-		ae.delete(0, END)
+	    print("Found", parser.group())
 
 
 def addapp_cancel(entry, add, cancel):
@@ -134,7 +136,6 @@ def addapp_button():
 		addapp_button_ADD.grid_remove()
 		addapp_button_CANCEL.grid_remove()
 		addapp_button_anotherapp.grid_remove()
-		addapp_button_command.grid_remove()
 		addapp_command_entry.grid_remove()
 		addapp_command_add.grid_remove()
 		addapp_command_cancel.grid_remove()
@@ -277,8 +278,6 @@ addapp_button_CANCEL.grid(column=last_column_num+4, row=7, sticky=W+E)
 addapp_button_another_current_state = False
 addapp_button_anotherapp = Button(master=menu_frame, text="AA", command=addapp_another)
 addapp_button_anotherapp.grid(column=last_column_num+3, row=8, padx=(50,0), sticky=W+E)
-addapp_button_command = Button(master=menu_frame, text="Command", command=addapp_another_command)
-addapp_button_command.grid(column=last_column_num+4, row=8, sticky=W+E)
 
 
 addapp_command_current_state = False
@@ -299,7 +298,6 @@ addapp_entry.grid_remove()
 addapp_button_ADD.grid_remove()
 addapp_button_CANCEL.grid_remove()
 addapp_button_anotherapp.grid_remove()
-addapp_button_command.grid_remove()
 addapp_command_entry.grid_remove()
 addapp_command_add.grid_remove()
 addapp_command_cancel.grid_remove()
