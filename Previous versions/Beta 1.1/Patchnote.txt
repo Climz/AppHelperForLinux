@@ -1,0 +1,3 @@
+Beta 1.1
+Changed:
+- Now window will be fix size when press any buttons that show/hide apps/libries

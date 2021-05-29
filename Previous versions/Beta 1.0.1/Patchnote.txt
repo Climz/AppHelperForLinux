@@ -1,0 +1,4 @@
+Beta 1.1
+Added:
+- Now when press AA, PL buttons, text button will change to active
+- Change buttons from ttk to default
