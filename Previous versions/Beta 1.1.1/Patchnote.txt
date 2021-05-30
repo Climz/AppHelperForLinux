@@ -1,0 +1,5 @@
+Beta 1.1.1
+Bug fix:
+- now PL button hide when press cancel button
+- text button on AA and PL buttons are changing now when press cancel button
+- lets go button now highlights when cursor on it
