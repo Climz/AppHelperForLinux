@@ -3,12 +3,12 @@ This is app helper for os linux. It helps me to install and configure my apps af
 
 # Dependencies
 Tkinter:
-...
+'''
 sudo apt install python3-tk qttools5-dev qttolls5-dev-tools
-...
-...
+'''
+'''
 pip3 install pyqt5-tools
-...
+'''
 
 # Run
 You need to run main.py file.
