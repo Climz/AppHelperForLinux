@@ -111,6 +111,7 @@ def addapp(ae):
 def addapp_cancel(entry, add, cancel):
 	global addapp_button_current_state
 	global addapp_button_another_current_state
+	global addapp_button_piplib_current_state
 
 	entry.grid_remove()
 	add.grid_remove()
@@ -119,8 +120,12 @@ def addapp_cancel(entry, add, cancel):
 	addapp_command_add.grid_remove()
 	addapp_command_cancel.grid_remove()
 	addapp_button_anotherapp.grid_remove()
+	addapp_button_piplib.grid_remove()
 	addapp_button_current_state = False
 	addapp_button_another_current_state = False
+	addapp_button_piplib_current_state = False
+	addapp_button_piplib.config(text = "PL")
+	addapp_button_anotherapp.config(text = "AA")
 
 
 def f():
@@ -404,7 +409,7 @@ label.grid(column=last_column_num+5, columnspan=last_column_num+4, row=1, padx=(
 
 #Last button to start proces
 final_button = Button(master=menu_frame, text="Let\'s go", command=letsgo,
-	width=7, height=1)
+	width=7, height=1, activebackground="#555555")
 final_button.grid(column=last_column_num+5, row=3, padx=(50,0), sticky=W+E)
 
 addapp_button_current_state = False
